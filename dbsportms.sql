@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Dec 10, 2020 at 11:50 PM
+-- Generation Time: Dec 14, 2020 at 06:00 PM
 -- Server version: 10.4.14-MariaDB
 -- PHP Version: 7.2.34
 
@@ -28,19 +28,25 @@ SET time_zone = "+00:00";
 --
 
 CREATE TABLE `absensi` (
-  `participantId` varchar(25) NOT NULL,
-  `roundId` varchar(25) NOT NULL,
-  `isPresent` char(1) NOT NULL
+  `absensiId` int(100) NOT NULL,
+  `participantId` char(5) NOT NULL,
+  `roundId` char(5) NOT NULL,
+  `isiPresensi` char(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `absensi`
 --
 
-INSERT INTO `absensi` (`participantId`, `roundId`, `isPresent`) VALUES
-('PA0001', 'ROCA002', 'Y'),
-('PA0002', 'ROCA003', 'Y'),
-('PA0003', 'ROCA004', 'Y');
+INSERT INTO `absensi` (`absensiId`, `participantId`, `roundId`, `isiPresensi`) VALUES
+(1, 'pa001', 'ro001', 'Y'),
+(3, 'pa003', 'ro002', 'Y'),
+(4, 'pa004', 'ro002', 'Y'),
+(5, 'pa002', 'ro003', 'Y'),
+(6, 'pa004', 'ro003', 'Y'),
+(7, 'pa001', 'ro004', 'Y'),
+(8, 'pa003', 'ro004', 'Y'),
+(10, 'pa002', 'ro001', 'Y');
 
 -- --------------------------------------------------------
 
@@ -49,7 +55,7 @@ INSERT INTO `absensi` (`participantId`, `roundId`, `isPresent`) VALUES
 --
 
 CREATE TABLE `admin` (
-  `adminId` varchar(25) NOT NULL,
+  `adminId` char(5) NOT NULL,
   `adminPassword` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -58,7 +64,11 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`adminId`, `adminPassword`) VALUES
-('admin', 'admin');
+('ad001', 'password1'),
+('ad002', 'password2'),
+('ad003', 'password3'),
+('ad004', 'password4'),
+('ad005', 'password5');
 
 -- --------------------------------------------------------
 
@@ -68,18 +78,22 @@ INSERT INTO `admin` (`adminId`, `adminPassword`) VALUES
 
 CREATE TABLE `event` (
   `eventId` varchar(25) NOT NULL,
-  `adminId` varchar(25) NOT NULL,
-  `teacherId` varchar(25) NOT NULL,
-  `eventDate` date NOT NULL,
-  `eventName` varchar(25) NOT NULL
+  `adminId` char(5) NOT NULL,
+  `teacherId` char(5) NOT NULL,
+  `startEventDate` date NOT NULL,
+  `endEventDate` date NOT NULL,
+  `eventName` varchar(25) NOT NULL,
+  `eventType` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `event`
 --
 
-INSERT INTO `event` (`eventId`, `adminId`, `teacherId`, `eventDate`, `eventName`) VALUES
-('Catur10021', 'admin', 'teach1', '2020-12-18', 'Catur Amatir');
+INSERT INTO `event` (`eventId`, `adminId`, `teacherId`, `startEventDate`, `endEventDate`, `eventName`, `eventType`) VALUES
+('ev001', 'ad001', 'tc001', '2020-12-09', '2020-12-10', 'Catur', 'Indoor'),
+('ev002', 'ad002', 'tc002', '2020-12-11', '2020-12-12', 'Tenis Meja', 'Outdoor'),
+('ev003', 'ad003', 'tc003', '2020-12-13', '2020-12-14', 'Bulu Tangkis', 'Indoor');
 
 -- --------------------------------------------------------
 
@@ -88,9 +102,9 @@ INSERT INTO `event` (`eventId`, `adminId`, `teacherId`, `eventDate`, `eventName`
 --
 
 CREATE TABLE `participant` (
-  `participantId` varchar(25) NOT NULL,
-  `studentId` varchar(25) NOT NULL,
-  `eventId` varchar(25) NOT NULL
+  `participantId` char(5) NOT NULL,
+  `studentId` varchar(5) NOT NULL,
+  `eventId` char(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -98,9 +112,22 @@ CREATE TABLE `participant` (
 --
 
 INSERT INTO `participant` (`participantId`, `studentId`, `eventId`) VALUES
-('PA0001', 'IS0001', 'Catur10021'),
-('PA0002', 'IS0002', 'Catur10021'),
-('PA0003', 'IS0003', 'Catur10021');
+('pa001', 'st020', 'ev001'),
+('pa002', 'st015', 'ev001'),
+('pa003', 'st017', 'ev001'),
+('pa004', 'st016', 'ev001'),
+('pa005', 'st011', 'ev002'),
+('pa006', 'st013', 'ev002'),
+('pa007', 'st015', 'ev002'),
+('pa008', 'st009', 'ev002'),
+('pa009', 'st018', 'ev002'),
+('pa010', 'st012', 'ev002'),
+('pa011', 'st001', 'ev003'),
+('pa012', 'st005', 'ev003'),
+('pa013', 'st004', 'ev003'),
+('pa014', 'st008', 'ev003'),
+('pa015', 'st003', 'ev003'),
+('pa016', 'st002', 'ev003');
 
 -- --------------------------------------------------------
 
@@ -109,20 +136,24 @@ INSERT INTO `participant` (`participantId`, `studentId`, `eventId`) VALUES
 --
 
 CREATE TABLE `round` (
-  `roundId` varchar(25) NOT NULL,
-  `eventId` varchar(25) NOT NULL,
-  `roundNo` varchar(2) NOT NULL
+  `roundId` char(5) NOT NULL,
+  `eventId` char(5) NOT NULL,
+  `roundNo` varchar(2) NOT NULL,
+  `roundDateStart` datetime NOT NULL,
+  `roundDateEnd` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `round`
 --
 
-INSERT INTO `round` (`roundId`, `eventId`, `roundNo`) VALUES
-('ROCA001', 'Catur10021', '1'),
-('ROCA002', 'Catur10021', '2'),
-('ROCA003', 'Catur10021', '3'),
-('ROCA004', 'Catur10021', '4');
+INSERT INTO `round` (`roundId`, `eventId`, `roundNo`, `roundDateStart`, `roundDateEnd`) VALUES
+('ro001', 'ev001', '1', '2020-12-09 07:10:20', '2020-12-09 09:10:20'),
+('ro002', 'ev001', '2', '2020-12-09 10:10:20', '2020-12-09 12:10:20'),
+('ro003', 'ev001', '3', '2020-12-09 13:10:20', '2020-12-09 15:10:20'),
+('ro004', 'ev001', '4', '2020-12-10 09:10:20', '2020-12-10 13:10:20'),
+('ro005', 'ev002', '1', '2020-12-11 08:10:20', '2020-12-11 11:10:20'),
+('ro006', 'ev003', '1', '2020-12-13 10:10:20', '2020-12-13 13:10:20');
 
 -- --------------------------------------------------------
 
@@ -131,8 +162,8 @@ INSERT INTO `round` (`roundId`, `eventId`, `roundNo`) VALUES
 --
 
 CREATE TABLE `standing` (
-  `eventId` varchar(25) NOT NULL,
-  `studentId` varchar(25) NOT NULL,
+  `eventId` char(5) NOT NULL,
+  `participantId` char(5) NOT NULL,
   `standingRank` int(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -140,10 +171,10 @@ CREATE TABLE `standing` (
 -- Dumping data for table `standing`
 --
 
-INSERT INTO `standing` (`eventId`, `studentId`, `standingRank`) VALUES
-('Catur10021', 'IS0001', 1),
-('Catur10021', 'IS0002', 2),
-('Catur10021', 'IS0003', 3);
+INSERT INTO `standing` (`eventId`, `participantId`, `standingRank`) VALUES
+('ev001', 'pa001', 1),
+('ev001', 'pa003', 2),
+('ev001', 'pa004', 3);
 
 -- --------------------------------------------------------
 
@@ -152,19 +183,36 @@ INSERT INTO `standing` (`eventId`, `studentId`, `standingRank`) VALUES
 --
 
 CREATE TABLE `student` (
-  `studentID` varchar(25) NOT NULL,
+  `studentId` char(5) NOT NULL,
   `studentName` varchar(25) NOT NULL,
-  `studentClass` char(3) NOT NULL
+  `studentClass` varchar(3) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `student`
 --
 
-INSERT INTO `student` (`studentID`, `studentName`, `studentClass`) VALUES
-('IS0001', 'Fawwaz', '2A'),
-('IS0002', 'Amjad', '2B'),
-('IS0003', 'Fuadi', '2C');
+INSERT INTO `student` (`studentId`, `studentName`, `studentClass`) VALUES
+('st001', 'Andi Dani', '9a'),
+('st002', 'Dimas Prabu', '9a'),
+('st003', 'Anggita Prili', '9b'),
+('st004', 'Wahyu Tama', '8a'),
+('st005', 'Mhita Sulastra', '7c'),
+('st006', 'Fani Lastri', '7c'),
+('st007', 'Titik Crina', '9c'),
+('st008', 'Koko Sebastian', '9c'),
+('st009', 'Dido Dodi', '8c'),
+('st010', 'Ana Sri Astuti', '8c'),
+('st011', 'Puji Astuti', '7a'),
+('st012', 'Ilonmas Bagja', '7a'),
+('st013', 'Aldebaran', '7a'),
+('st014', 'Dadang Jetpam', '9c'),
+('st015', 'Adeung Prayoga', '8a'),
+('st016', 'Kiki Sutisni', '8a'),
+('st017', 'Anggi Annis', '8a'),
+('st018', 'Aldho', '7c'),
+('st019', 'Herdiansyah', '9b'),
+('st020', 'Dandi Prayoga', '9b');
 
 -- --------------------------------------------------------
 
@@ -173,17 +221,22 @@ INSERT INTO `student` (`studentID`, `studentName`, `studentClass`) VALUES
 --
 
 CREATE TABLE `teacher` (
-  `teacherId` varchar(25) NOT NULL,
+  `teacherId` char(5) NOT NULL,
   `teacherPassword` varchar(25) NOT NULL,
-  `teacherName` varchar(25) NOT NULL
+  `teacherName` varchar(25) NOT NULL,
+  `teacherEmail` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Dumping data for table `teacher`
 --
 
-INSERT INTO `teacher` (`teacherId`, `teacherPassword`, `teacherName`) VALUES
-('teach1', 'teach1', 'Eko');
+INSERT INTO `teacher` (`teacherId`, `teacherPassword`, `teacherName`, `teacherEmail`) VALUES
+('tc001', 'password1', 'Ayu Pratiwi', 'ayupratiwi@gmail.com'),
+('tc002', 'password2', 'Agus Dani', 'agusdani@gmail.com'),
+('tc003', 'password3', 'Raden Ari', 'radenari@gmail.com'),
+('tc004', 'password4', 'Rika Nurul', 'rikanurul@gmail.com'),
+('tc005', 'password5', 'Bambang Supriatna', 'bambangsupriatna@gmail.co');
 
 -- --------------------------------------------------------
 
@@ -192,8 +245,8 @@ INSERT INTO `teacher` (`teacherId`, `teacherPassword`, `teacherName`) VALUES
 --
 
 CREATE TABLE `winner` (
-  `participantId` varchar(25) NOT NULL,
-  `roundId` varchar(25) NOT NULL
+  `participantId` char(5) NOT NULL,
+  `roundId` char(5) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -201,7 +254,10 @@ CREATE TABLE `winner` (
 --
 
 INSERT INTO `winner` (`participantId`, `roundId`) VALUES
-('PA0001', 'ROCA003');
+('pa001', 'ro001'),
+('pa003', 'ro002'),
+('pa004', 'ro003'),
+('pa001', 'ro004');
 
 --
 -- Indexes for dumped tables
@@ -211,6 +267,7 @@ INSERT INTO `winner` (`participantId`, `roundId`) VALUES
 -- Indexes for table `absensi`
 --
 ALTER TABLE `absensi`
+  ADD PRIMARY KEY (`absensiId`),
   ADD KEY `participantId` (`participantId`),
   ADD KEY `roundId` (`roundId`);
 
@@ -247,14 +304,14 @@ ALTER TABLE `round`
 -- Indexes for table `standing`
 --
 ALTER TABLE `standing`
-  ADD KEY `FK_standing1` (`eventId`),
-  ADD KEY `FK_standing2` (`studentId`);
+  ADD KEY `eventId` (`eventId`),
+  ADD KEY `participantId` (`participantId`);
 
 --
 -- Indexes for table `student`
 --
 ALTER TABLE `student`
-  ADD PRIMARY KEY (`studentID`);
+  ADD PRIMARY KEY (`studentId`);
 
 --
 -- Indexes for table `teacher`
@@ -268,6 +325,16 @@ ALTER TABLE `teacher`
 ALTER TABLE `winner`
   ADD KEY `participantId` (`participantId`),
   ADD KEY `roundId` (`roundId`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `absensi`
+--
+ALTER TABLE `absensi`
+  MODIFY `absensiId` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- Constraints for dumped tables
@@ -285,18 +352,14 @@ ALTER TABLE `absensi`
 --
 ALTER TABLE `event`
   ADD CONSTRAINT `event_ibfk_1` FOREIGN KEY (`adminId`) REFERENCES `admin` (`adminId`),
-  ADD CONSTRAINT `event_ibfk_2` FOREIGN KEY (`teacherId`) REFERENCES `teacher` (`teacherId`),
-  ADD CONSTRAINT `event_ibfk_3` FOREIGN KEY (`adminId`) REFERENCES `admin` (`adminId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `event_ibfk_4` FOREIGN KEY (`teacherId`) REFERENCES `teacher` (`teacherId`) ON DELETE CASCADE;
+  ADD CONSTRAINT `event_ibfk_2` FOREIGN KEY (`teacherId`) REFERENCES `teacher` (`teacherId`);
 
 --
 -- Constraints for table `participant`
 --
 ALTER TABLE `participant`
   ADD CONSTRAINT `participant_ibfk_1` FOREIGN KEY (`eventId`) REFERENCES `event` (`eventId`),
-  ADD CONSTRAINT `participant_ibfk_2` FOREIGN KEY (`studentId`) REFERENCES `student` (`studentID`),
-  ADD CONSTRAINT `participant_ibfk_3` FOREIGN KEY (`eventId`) REFERENCES `event` (`eventId`) ON DELETE CASCADE,
-  ADD CONSTRAINT `participant_ibfk_4` FOREIGN KEY (`studentId`) REFERENCES `student` (`studentID`) ON DELETE CASCADE;
+  ADD CONSTRAINT `participant_ibfk_2` FOREIGN KEY (`studentId`) REFERENCES `student` (`studentId`);
 
 --
 -- Constraints for table `round`
@@ -308,8 +371,8 @@ ALTER TABLE `round`
 -- Constraints for table `standing`
 --
 ALTER TABLE `standing`
-  ADD CONSTRAINT `FK_standing1` FOREIGN KEY (`eventId`) REFERENCES `event` (`eventId`),
-  ADD CONSTRAINT `FK_standing2` FOREIGN KEY (`studentId`) REFERENCES `student` (`studentID`);
+  ADD CONSTRAINT `standing_ibfk_1` FOREIGN KEY (`eventId`) REFERENCES `event` (`eventId`),
+  ADD CONSTRAINT `standing_ibfk_2` FOREIGN KEY (`participantId`) REFERENCES `participant` (`participantId`);
 
 --
 -- Constraints for table `winner`
